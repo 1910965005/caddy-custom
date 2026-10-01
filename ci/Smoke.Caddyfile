@@ -28,7 +28,7 @@ http://:18080 {
 	respond "caddy-custom-ci" 200
 }
 
-https://:18443 {
+https://localhost:18443 {
 	tls internal
 	respond "caddy-custom-ci" 200
 }

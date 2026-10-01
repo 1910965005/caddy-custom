@@ -15,7 +15,9 @@ opener = urllib.request.build_opener(
 
 
 def check_http(port, scheme):
-    with opener.open(f"{scheme}://127.0.0.1:{port}/", timeout=2) as response:
+    # HTTPS needs a named site and matching SNI for Caddy's internal issuer.
+    host = "localhost" if scheme == "https" else "127.0.0.1"
+    with opener.open(f"{scheme}://{host}:{port}/", timeout=2) as response:
         assert response.status == 200
         assert response.read() == expected
 
