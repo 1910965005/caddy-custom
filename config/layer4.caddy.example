@@ -1,0 +1,14 @@
+# Import this INSIDE the global options block of Caddyfile.
+# Use dedicated ports so HTTPS and HTTP/3 keep their normal 443 listeners.
+layer4 {
+	tcp/:15432 {
+		route {
+			proxy tcp/{$L4_TCP_UPSTREAM}
+		}
+	}
+	udp/:15182 {
+		route {
+			proxy udp/{$L4_UDP_UPSTREAM}
+		}
+	}
+}

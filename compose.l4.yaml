@@ -1,0 +1,7 @@
+# Enable with: docker compose -f compose.yaml -f compose.l4.yaml ...
+# Requires config/layer4.caddy and its import in config/Caddyfile.
+services:
+  caddy:
+    ports:
+      - "${L4_BIND_ADDRESS:-127.0.0.1}:${L4_TCP_PORT:-15432}:15432/tcp"
+      - "${L4_BIND_ADDRESS:-127.0.0.1}:${L4_UDP_PORT:-15182}:15182/udp"

@@ -1,0 +1,4 @@
+# The build needs only the Dockerfile. Never send VPS files or .env to BuildKit.
+**
+!Dockerfile
+!.dockerignore

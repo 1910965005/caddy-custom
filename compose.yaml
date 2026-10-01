@@ -1,0 +1,33 @@
+name: caddy-custom
+
+services:
+  caddy:
+    image: ${CADDY_IMAGE:-ghcr.io/1910965005/caddy-custom:latest}
+    platform: linux/amd64
+    restart: unless-stopped
+    stop_grace_period: 30s
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL in .env}
+      CF_API_TOKEN: ${CF_API_TOKEN:?Set CF_API_TOKEN in .env}
+      L4_TCP_UPSTREAM: ${L4_TCP_UPSTREAM:-10.0.0.10:5432}
+      L4_UDP_UPSTREAM: ${L4_UDP_UPSTREAM:-10.0.0.10:51820}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./config:/etc/caddy:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  caddy_data:
+  caddy_config:

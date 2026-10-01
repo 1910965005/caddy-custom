@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+config/layer4.caddy
+runtime/
+backups/
+*.log
+*.zip
+*.tar
+*.tar.gz
+.DS_Store
+modules.txt
+__pycache__/

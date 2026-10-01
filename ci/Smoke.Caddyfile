@@ -1,0 +1,34 @@
+{
+	admin off
+	auto_https disable_redirects
+	skip_install_trust
+	servers {
+		protocols h1 h2 h3
+	}
+	layer4 {
+		tcp/:15432 {
+			route {
+				proxy tcp/127.0.0.1:18080
+			}
+		}
+		udp/:15182 {
+			route {
+				proxy udp/127.0.0.1:15183
+			}
+		}
+		udp/:15183 {
+			route {
+				echo
+			}
+		}
+	}
+}
+
+http://:18080 {
+	respond "caddy-custom-ci" 200
+}
+
+https://:18443 {
+	tls internal
+	respond "caddy-custom-ci" 200
+}
