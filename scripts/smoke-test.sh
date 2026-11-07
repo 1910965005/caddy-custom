@@ -16,6 +16,16 @@ docker run --rm -v "$PWD/examples:/examples:ro" "$image" \
 docker run -d --name "$container" -p 127.0.0.1::80 \
   -v "$PWD/conf:/etc/caddy:ro" "$image"
 port="$(docker port "$container" 80/tcp | sed 's/.*://')"
-curl --fail --silent --show-error --retry 15 --retry-connrefused \
-  --retry-delay 1 --max-time 5 "http://127.0.0.1:${port}" \
-  | grep -Fx 'Caddy custom image is running.'
+# Docker may accept connections before Caddy is ready, causing either a
+# refused connection or a reset. Retry readiness, but require the exact body.
+for attempt in {1..30}; do
+  if response="$(curl --fail --silent --show-error --max-time 2 "http://127.0.0.1:${port}")"; then
+    if [[ "$response" == "Caddy custom image is running." ]]; then
+      printf '%s\n' "$response"
+      exit 0
+    fi
+  fi
+  sleep 1
+done
+echo "Caddy did not return the expected HTTP response before the deadline" >&2
+exit 1
