@@ -1,0 +1,9 @@
+{
+	email you@example.com
+}
+example.com {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+	respond "HTTPS with custom Caddy is working." 200
+}
